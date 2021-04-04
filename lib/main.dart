@@ -56,7 +56,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   bool isShown;
   @override
   void initState() {
-    request();
+    // request();
     rootPath = '/storage/emulated/0/Call';
     checkStateLogin();
     super.initState();
