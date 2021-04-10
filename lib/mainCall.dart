@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:device_info/device_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_phone_state/flutter_phone_state.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
         title: 'Welcome $currentName',
         description: 'You have pushed the button this many times:',
         image: 'assets/images/logo.png',
+        currentName: currentName,
       ),
       debugShowCheckedModeBanner: false,
     );
@@ -38,15 +40,13 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
-    Key key,
-    this.title,
-    this.description,
-    this.image,
-  }) : super(key: key);
+  MyHomePage(
+      {Key key, this.title, this.description, this.image, this.currentName})
+      : super(key: key);
   final String title;
   final String description;
   final String image;
+  final String currentName;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -198,13 +198,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
-    print('_localPath' + directory.path);
+    // print('_localPath' + directory.path);
     return directory.path;
   }
 
   Future<File> get _localFile async {
     final path = await _localPath;
-    print("Path:_________________$path");
+    // print("Path:_________________$path");
     return File(path);
   }
 
@@ -252,10 +252,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         onLongPress: () {},
       ));
       counter++;
-      // await _connection.postMethodWithFile('File', file).then((int code) {
-      //   statusCode = code;
-      //   print("Status Code is : ${statusCode}");
-      // });
+      await _connection
+          .postMethodWithFile('File', file, widget.currentName)
+          .then((int code) {
+        statusCode = code;
+        print("Status Code is : ${statusCode}");
+      });
       // file.delete();
     }
   }
@@ -322,10 +324,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         print('State is : pause');
         break;
       case AppLifecycleState.resumed:
-        print('State is : resume');
-        // GetFileforUpload
-
-        // _onStateCallOut();
+        setState(() {
+          _controlListView();
+        });
         break;
       case AppLifecycleState.inactive:
         print('State is : inactive');
@@ -376,32 +377,32 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               fillCards(),
             ]),
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
-          setState(() {
-            textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
-            textWidgets.add(Text('board: ${androidInfo.board}'));
-            textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
-            textWidgets.add(Text('brand: ${androidInfo.brand}'));
-            textWidgets.add(Text('device: ${androidInfo.device}'));
-            textWidgets.add(Text('display: ${androidInfo.display}'));
-            textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
-            textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
-            textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
-            textWidgets.add(Text('host: ${androidInfo.host}'));
-            textWidgets.add(Text('id: ${androidInfo.id}'));
-            textWidgets
-                .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
-            textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
-            textWidgets.add(Text('model: ${androidInfo.model}'));
-            textWidgets.add(Text('product: ${androidInfo.product}'));
-            textWidgets.add(Text('tags: ${androidInfo.tags}'));
-          });
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+      //     setState(() {
+      //       textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
+      //       textWidgets.add(Text('board: ${androidInfo.board}'));
+      //       textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
+      //       textWidgets.add(Text('brand: ${androidInfo.brand}'));
+      //       textWidgets.add(Text('device: ${androidInfo.device}'));
+      //       textWidgets.add(Text('display: ${androidInfo.display}'));
+      //       textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
+      //       textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
+      //       textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
+      //       textWidgets.add(Text('host: ${androidInfo.host}'));
+      //       textWidgets.add(Text('id: ${androidInfo.id}'));
+      //       textWidgets
+      //           .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
+      //       textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
+      //       textWidgets.add(Text('model: ${androidInfo.model}'));
+      //       textWidgets.add(Text('product: ${androidInfo.product}'));
+      //       textWidgets.add(Text('tags: ${androidInfo.tags}'));
+      //     });
+      //   },
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.refresh),
+      // ),
     );
   }
 }

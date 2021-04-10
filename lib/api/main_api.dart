@@ -50,13 +50,14 @@ class ApiConnection {
     }
   }
 
-  Future<int> postMethodWithFile(String module, File file) async {
-    _request = Uri.https(_targetUrl, _targetPath + module);
+  Future<int> postMethodWithFile(
+      String module, File file, String username) async {
+    Map<String, String> param = {"username": username};
+    _request = Uri.https(_targetUrl, _targetPath + module, param);
     var request = http.MultipartRequest('POST', _request);
-    request.fields["PhoneNumber"] = "0941610031";
     request.files.add(await http.MultipartFile.fromPath('files', file.path));
     http.StreamedResponse res = await request.send();
-    // print(request);
+    print(request);
     return res.statusCode;
   }
 }

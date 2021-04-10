@@ -56,7 +56,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   bool isShown;
   @override
   void initState() {
-    request();
+    // request();
     rootPath = '/storage/emulated/0/Call';
     checkStateLogin();
     super.initState();
@@ -94,6 +94,8 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   }
 
   Future<void> checkStateLogin() async {
+    await EasyLoading.show(
+        status: 'Please Wait...', maskType: EasyLoadingMaskType.black);
     final myDir = Directory(rootPath);
     final authFile = getFilepattern();
     authFile.exists().then((bool hasFile) {
@@ -113,6 +115,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
         authFile.delete();
       }
     });
+    EasyLoading.dismiss();
   }
 
   bool checkAuthFile(String textRead) {
@@ -137,7 +140,8 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   }
 
   Future<void> callLogin() async {
-    EasyLoading.show(status: 'Please Wait...');
+    await EasyLoading.show(
+        status: 'Please Wait...', maskType: EasyLoadingMaskType.black);
     Map<String, dynamic> params = {
       "username": pUsername.text,
       "password": pPassword.text
