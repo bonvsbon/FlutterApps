@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
 import 'api/main_api.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'common/platform.dart';
 
 void main() {
   runApp(new MyApp());
@@ -75,10 +76,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   String _mobileNumber = '';
   List<SimCard> _simCard = <SimCard>[];
   String rootPath;
+  GetPlatForm platform = new GetPlatForm();
   var files;
   @override
   void initState() {
-    rootPath = "/storage/emulated/0/Call";
+    platform.checkPlatform().then((String value) {
+      rootPath = value;
+    });
     super.initState();
     getDevice();
     _getId();

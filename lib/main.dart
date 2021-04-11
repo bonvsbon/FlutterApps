@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'package:path_provider_ex/path_provider_ex.dart';
 import 'dart:async';
 import 'api/main_api.dart';
 import 'mainCall.dart' as mainCall;
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'common/platform.dart';
 
 void main() {
   runApp(new PreLogin());
@@ -51,6 +51,7 @@ class PreLoginPage extends StatefulWidget {
 class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   int _welcomeText = 0;
   ApiConnection api = new ApiConnection();
+  GetPlatForm platform = new GetPlatForm();
   TextEditingController pUsername = TextEditingController();
   TextEditingController pPassword = TextEditingController();
   String rootPath = "";
@@ -58,16 +59,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   bool isShown;
   @override
   void initState() {
-    // request();
-    if (Platform.isAndroid) {
-      rootPath = '/storage/emulated/0/Call';
-    } else {
-      _localPath.then((String value) {
-        setState(() {
-          rootPath = value;
-        });
-      });
-    }
+    request();
     checkStateLogin();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -103,44 +95,33 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
     });
   }
 
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    // print('_localPath' + directory.path);
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    // print("Path:_________________$path");
-    return File(path);
-  }
-
   Future<void> checkStateLogin() async {
-    _localPath.then((String value) {
-      setState(() {
-        iosrootPath = value;
-      });
+    print("This is my Plat Form : " + await platform.checkPlatform());
+    await platform.checkPlatform().then((String value) {
+      rootPath = value;
     });
-    // final myDir = Directory(rootPath);
-    // final authFile = getFilepattern();
-    // authFile.exists().then((bool hasFile) {
-    //   String textRead = authFile.readAsStringSync();
-    //   bool isTrue = checkAuthFile(textRead);
-    //   if (isTrue) {
-    //     print('Text in File is : $textRead');
-    //     Map<String, dynamic> details = jsonDecode(textRead);
-    //     print('Text in File is : ${details['Username']}');
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => mainCall.MyApp(
-    //                   currentName: details['Username'],
-    //                 )));
-    //   } else {
-    //     authFile.delete();
-    //   }
-    // });
+    print("TETETETETETETETE $rootPath");
+    Directory myDir = Directory(rootPath);
+    if (myDir.existsSync()) {
+      final authFile = getFilepattern();
+      authFile.exists().then((bool hasFile) {
+        String textRead = authFile.readAsStringSync();
+        bool isTrue = checkAuthFile(textRead);
+        if (isTrue) {
+          print('Text in File is : $textRead');
+          Map<String, dynamic> details = jsonDecode(textRead);
+          print('Text in File is : ${details['Username']}');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => mainCall.MyApp(
+                        currentName: details['Username'],
+                      )));
+        } else {
+          authFile.delete();
+        }
+      });
+    }
   }
 
   bool checkAuthFile(String textRead) {
