@@ -42,12 +42,7 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 
-<<<<<<< HEAD
 	  <key>NSLocationWhenInUseUsageDescription</key>
-=======
-	<!-- Permission options for the `location` group -->
-    <key>NSLocationWhenInUseUsageDescription</key>
->>>>>>> eec3facec0cd35a6463b5f1e06c6cccbf097d423
     <string>Need location when in use</string>
     <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
     <string>Always and when in use!</string>

@@ -59,19 +59,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   @override
   void initState() {
     // request();
-<<<<<<< HEAD
     rootPath = '/storage/emulated/0/Call';
-=======
-    if (Platform.isAndroid) {
-      rootPath = '/storage/emulated/0/Call';
-    } else {
-      _localPath.then((String value) {
-        setState(() {
-          rootPath = value;
-        });
-      });
-    }
->>>>>>> eec3facec0cd35a6463b5f1e06c6cccbf097d423
     checkStateLogin();
     super.initState();
     WidgetsBinding.instance.addObserver(this);
@@ -121,7 +109,6 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   }
 
   Future<void> checkStateLogin() async {
-<<<<<<< HEAD
     await EasyLoading.show(
         status: 'Please Wait...', maskType: EasyLoadingMaskType.black);
     final myDir = Directory(rootPath);
@@ -144,32 +131,6 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
       }
     });
     EasyLoading.dismiss();
-=======
-    _localPath.then((String value) {
-      setState(() {
-        iosrootPath = value;
-      });
-    });
-    // final myDir = Directory(rootPath);
-    // final authFile = getFilepattern();
-    // authFile.exists().then((bool hasFile) {
-    //   String textRead = authFile.readAsStringSync();
-    //   bool isTrue = checkAuthFile(textRead);
-    //   if (isTrue) {
-    //     print('Text in File is : $textRead');
-    //     Map<String, dynamic> details = jsonDecode(textRead);
-    //     print('Text in File is : ${details['Username']}');
-    //     Navigator.push(
-    //         context,
-    //         MaterialPageRoute(
-    //             builder: (context) => mainCall.MyApp(
-    //                   currentName: details['Username'],
-    //                 )));
-    //   } else {
-    //     authFile.delete();
-    //   }
-    // });
->>>>>>> eec3facec0cd35a6463b5f1e06c6cccbf097d423
   }
 
   bool checkAuthFile(String textRead) {
