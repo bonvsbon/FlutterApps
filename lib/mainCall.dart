@@ -80,15 +80,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   var files;
   @override
   void initState() {
-    platform.checkPlatform().then((String value) {
-      rootPath = value;
-    });
-    super.initState();
-    getDevice();
-    _getId();
-    _controlListView();
-    //callAPI();
+    (() async {
+      await platform.checkPlatform().then((String value) {
+        rootPath = value;
+        getDevice();
+        _getId();
+        _controlListView();
+        callAPI();
+      });
+    })();
 
+    super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -370,9 +372,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               ),
               ...resultListView,
               RaisedButton.icon(
-                label: Text('Submit Recording File...',
-                    style: TextStyle(color: Colors.white)),
-                icon: Icon(Icons.save_alt, size: 18, color: Colors.white),
+                label: Text('Call', style: TextStyle(color: Colors.white)),
+                icon: Icon(Icons.call_outlined, size: 18, color: Colors.white),
                 color: Colors.blue,
                 onPressed: _pressedCall,
               ),

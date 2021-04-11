@@ -3,16 +3,16 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 
 class GetPlatForm {
-  String isStorage = "";
+  String isStorage = "/storage/emulated/0/Call";
 
   Future<String> checkPlatform() async {
-    if (Platform.isAndroid) {
-      return "222222222222";
-    } else {
-      _localPath.then((String value) {
-        return value;
+    String val = isStorage;
+    if (Platform.isIOS) {
+      await _localPath.then((String value) {
+        val = value;
       });
     }
+    return val;
   }
 
   Future<String> get _localPath async {
