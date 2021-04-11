@@ -96,6 +96,8 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   }
 
   Future<void> checkStateLogin() async {
+    await EasyLoading.show(
+        status: 'Please Wait...', maskType: EasyLoadingMaskType.black);
     print("This is my Plat Form : " + await platform.checkPlatform());
     await platform.checkPlatform().then((String value) {
       rootPath = value;
@@ -122,6 +124,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
         }
       });
     }
+    EasyLoading.dismiss();
   }
 
   bool checkAuthFile(String textRead) {
@@ -146,7 +149,8 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   }
 
   Future<void> callLogin() async {
-    EasyLoading.show(status: 'Please Wait...');
+    await EasyLoading.show(
+        status: 'Please Wait...', maskType: EasyLoadingMaskType.black);
     Map<String, dynamic> params = {
       "username": pUsername.text,
       "password": pPassword.text
