@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_phone_state/flutter_phone_state.dart';
 import 'package:imei_plugin/imei_plugin.dart';
-import 'package:mobile_number/mobile_number.dart';
-import 'package:mobile_number/sim_card.dart';
+// import 'package:mobile_number/mobile_number.dart';
+// import 'package:mobile_number/sim_card.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart' as path;
@@ -55,6 +55,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+  GetPlatForm platform = new GetPlatForm();
   int _counter = 0;
   String _platformImei = 'Unknown';
   String uniqueId = "Unknown";
@@ -74,9 +75,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   ApiConnection _connection = new ApiConnection();
   Map<String, dynamic> _deviceData = <String, dynamic>{};
   String _mobileNumber = '';
-  List<SimCard> _simCard = <SimCard>[];
+  // List<SimCard> _simCard = <SimCard>[];
   String rootPath;
-  GetPlatForm platform = new GetPlatForm();
   var files;
   @override
   void initState() {
@@ -86,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         getDevice();
         _getId();
         _controlListView();
-        callAPI();
       });
     })();
-
     super.initState();
+    //callAPI();
+
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -112,31 +112,31 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initMobileNumberState() async {
-    if (!await MobileNumber.hasPhonePermission) {
-      await MobileNumber.requestPhonePermission;
-      return;
-    }
-    String mobileNumber = '';
-    // Platform messages may fail, so we use a try/catch PlatformException.
+  // Future<void> initMobileNumberState() async {
+  //   if (!await MobileNumber.hasPhonePermission) {
+  //     await MobileNumber.requestPhonePermission;
+  //     return;
+  //   }
+  //   String mobileNumber = '';
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
 
-    mobileNumber = await MobileNumber.mobileNumber;
-    _simCard = await MobileNumber.getSimCards;
+  //   mobileNumber = await MobileNumber.mobileNumber;
+  //   _simCard = await MobileNumber.getSimCards;
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
+  //   // If the widget was removed from the tree while the asynchronous platform
+  //   // message was in flight, we want to discard the reply rather than calling
+  //   // setState to update our non-existent appearance.
+  //   if (!mounted) return;
 
-    setState(() {
-      _mobileNumber = mobileNumber;
-    });
-  }
+  //   setState(() {
+  //     _mobileNumber = mobileNumber;
+  //   });
+  // }
 
-  Future<List<SimCard>> _getSim() async {
-    final List<SimCard> simCards = await MobileNumber.getSimCards;
-    return simCards;
-  }
+  // Future<List<SimCard>> _getSim() async {
+  //   final List<SimCard> simCards = await MobileNumber.getSimCards;
+  //   return simCards;
+  // }
 
   Future<void> _getId() async {
     String result;
@@ -219,7 +219,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       subtitle: Text('../Back to'),
       onTap: () {
         setState(() {
-          _baseFolder = '/storage/emulated/0/Call';
+          _baseFolder = rootPath;
         });
         _controlListView();
       },
@@ -245,18 +245,18 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       if (fileName.contains(".txt")) {
         continue;
       }
-      resultListView.add(new ListTile(
-        title: Text('ไฟล์เสียงที่ $counter'),
-        subtitle: Text('ชื่่อ $fileName'),
-        leading: Icon(Icons.add_ic_call_rounded),
-        onTap: () {
-          setState(() {
-            _baseFolder = fileName;
-          });
-          _controlListView();
-        },
-        onLongPress: () {},
-      ));
+      // resultListView.add(new ListTile(
+      //   title: Text('ไฟล์เสียงที่ $counter'),
+      //   subtitle: Text('ชื่่อ $fileName'),
+      //   leading: Icon(Icons.add_ic_call_rounded),
+      //   onTap: () {
+      //     setState(() {
+      //       _baseFolder = fileName;
+      //     });
+      //     _controlListView();
+      //   },
+      //   onLongPress: () {},
+      // ));
       counter++;
       await _connection
           .postMethodWithFile('File', file, widget.currentName)
@@ -269,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Future<Directory> mainz() async {
-    final myDir = Directory('/storage/0F1D-2619/Call');
+    final myDir = Directory(rootPath);
     List<FileSystemEntity> files = myDir.listSync();
 
     for (FileSystemEntity f in files) {
@@ -343,13 +343,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
-  Widget fillCards() {
-    List<Widget> widgets = _simCard
-        .map((SimCard sim) => Text(
-            'Sim Card Number: (${sim.countryPhonePrefix}) - ${sim.number}\nCarrier Name: ${sim.carrierName}\nCountry Iso: ${sim.countryIso}\nDisplay Name: ${sim.displayName}\nSim Slot Index: ${sim.slotIndex}\n\n'))
-        .toList();
-    return Column(children: widgets);
-  }
+  // Widget fillCards() {
+  //   List<Widget> widgets = _simCard
+  //       .map((SimCard sim) => Text(
+  //           'Sim Card Number: (${sim.countryPhonePrefix}) - ${sim.number}\nCarrier Name: ${sim.carrierName}\nCountry Iso: ${sim.countryIso}\nDisplay Name: ${sim.displayName}\nSim Slot Index: ${sim.slotIndex}\n\n'))
+  //       .toList();
+  //   return Column(children: widgets);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -373,41 +373,41 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               ...resultListView,
               RaisedButton.icon(
                 label: Text('Call', style: TextStyle(color: Colors.white)),
-                icon: Icon(Icons.call_outlined, size: 18, color: Colors.white),
+                icon: Icon(Icons.call, size: 18, color: Colors.white),
                 color: Colors.blue,
                 onPressed: _pressedCall,
               ),
               ...textWidgets,
               Text('Running on: $_mobileNumber\n'),
-              fillCards(),
+              // fillCards(),
             ]),
           )),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () async {
-      //     AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
-      //     setState(() {
-      //       textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
-      //       textWidgets.add(Text('board: ${androidInfo.board}'));
-      //       textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
-      //       textWidgets.add(Text('brand: ${androidInfo.brand}'));
-      //       textWidgets.add(Text('device: ${androidInfo.device}'));
-      //       textWidgets.add(Text('display: ${androidInfo.display}'));
-      //       textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
-      //       textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
-      //       textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
-      //       textWidgets.add(Text('host: ${androidInfo.host}'));
-      //       textWidgets.add(Text('id: ${androidInfo.id}'));
-      //       textWidgets
-      //           .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
-      //       textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
-      //       textWidgets.add(Text('model: ${androidInfo.model}'));
-      //       textWidgets.add(Text('product: ${androidInfo.product}'));
-      //       textWidgets.add(Text('tags: ${androidInfo.tags}'));
-      //     });
-      //   },
-      //   tooltip: 'Increment',
-      //   child: Icon(Icons.refresh),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+          setState(() {
+            textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
+            textWidgets.add(Text('board: ${androidInfo.board}'));
+            textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
+            textWidgets.add(Text('brand: ${androidInfo.brand}'));
+            textWidgets.add(Text('device: ${androidInfo.device}'));
+            textWidgets.add(Text('display: ${androidInfo.display}'));
+            textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
+            textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
+            textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
+            textWidgets.add(Text('host: ${androidInfo.host}'));
+            textWidgets.add(Text('id: ${androidInfo.id}'));
+            textWidgets
+                .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
+            textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
+            textWidgets.add(Text('model: ${androidInfo.model}'));
+            textWidgets.add(Text('product: ${androidInfo.product}'));
+            textWidgets.add(Text('tags: ${androidInfo.tags}'));
+          });
+        },
+        tooltip: 'Increment',
+        child: Icon(Icons.refresh),
+      ),
     );
   }
 }

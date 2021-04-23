@@ -11,7 +11,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'common/platform.dart';
 
 void main() {
-  runApp(new PreLogin());
+  runApp(PreLogin());
 }
 
 class PreLogin extends StatelessWidget {
@@ -50,6 +50,7 @@ class PreLoginPage extends StatefulWidget {
 
 class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   int _welcomeText = 0;
+  PermissionStatus _status;
   ApiConnection api = new ApiConnection();
   GetPlatForm platform = new GetPlatForm();
   TextEditingController pUsername = TextEditingController();
@@ -59,19 +60,18 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   bool isShown;
   @override
   void initState() {
-    request();
+    super.initState();
     (() async {
+      request();
       await platform.checkPlatform().then((String value) {
         rootPath = value;
-        print("TESTING : $rootPath");
         checkStateLogin();
       });
     })();
-    super.initState();
     WidgetsBinding.instance.addObserver(this);
   }
 
-  Future<void> request() async {
+  request() async {
     isShown = await Permission.contacts.shouldShowRequestRationale;
     var status = await Permission.camera.status;
     if (status.isUndetermined) {
@@ -154,14 +154,15 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
       "username": pUsername.text,
       "password": pPassword.text
     };
-    print(params);
+    // print("${params}");
     api.postMethodWithParam("Authorize", params).then((String result) {
-      final f = getFilepattern();
-      f.writeAsStringSync(result);
-
+      print(result);
       bool checkAuth = checkAuthFile(result);
-      print(checkAuth);
+
+      // print("$checkAuth");
       if (checkAuth) {
+        final f = getFilepattern();
+        f.writeAsStringSync(result);
         EasyLoading.showSuccess('Login Successfully!');
         Map<String, dynamic> details = jsonDecode(result);
         Navigator.push(
@@ -170,6 +171,8 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
                 builder: (context) => mainCall.MyApp(
                       currentName: details['Username'],
                     )));
+      } else {
+        EasyLoading.showError("Login Fail");
       }
 
       // showDialog<void>(
