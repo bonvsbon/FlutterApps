@@ -82,10 +82,11 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
     if (await Permission.location.isRestricted) {}
     if (await Permission.contacts.request().isGranted) {}
     Map<Permission, PermissionStatus> statuses = await [
-      Permission.location,
-      Permission.storage,
+      Permission.locationAlways,
+      Permission.microphone,
       Permission.phone,
-      Permission.camera
+      Permission.camera,
+      Permission.storage
     ].request();
 
     if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
@@ -106,23 +107,25 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
   Future<void> checkStateLogin() async {
     Directory myDir = Directory(rootPath);
     final authFile = getFilepattern();
-    authFile.exists().then((bool hasFile) {
-      String textRead = authFile.readAsStringSync();
-      bool isTrue = checkAuthFile(textRead);
-      if (isTrue) {
-        print('Text in File is : $textRead');
-        Map<String, dynamic> details = jsonDecode(textRead);
-        print('Text in File is : ${details['Username']}');
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => mainCall.MyApp(
-                      currentName: details['Username'],
-                    )));
-      } else {
-        authFile.delete();
-      }
-    });
+    if (authFile.existsSync()) {
+      authFile.exists().then((bool hasFile) {
+        String textRead = authFile.readAsStringSync();
+        bool isTrue = checkAuthFile(textRead);
+        if (isTrue) {
+          print('Text in File is : $textRead');
+          Map<String, dynamic> details = jsonDecode(textRead);
+          print('Text in File is : ${details['Username']}');
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => mainCall.MyApp(
+                        currentName: details['username'],
+                      )));
+        } else {
+          authFile.delete();
+        }
+      });
+    }
     EasyLoading.dismiss();
   }
 
@@ -155,7 +158,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
       "password": pPassword.text
     };
     // print("${params}");
-    api.postMethodWithParam("Authorize", params).then((String result) {
+    api.postMethodWithParam("Authorize", params).then((String result) async {
       print(result);
       bool checkAuth = checkAuthFile(result);
 
@@ -169,7 +172,7 @@ class _PreLoginState extends State<PreLoginPage> with WidgetsBindingObserver {
             context,
             MaterialPageRoute(
                 builder: (context) => mainCall.MyApp(
-                      currentName: details['Username'],
+                      currentName: details['username'],
                     )));
       } else {
         EasyLoading.showError("Login Fail");

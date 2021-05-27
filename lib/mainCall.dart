@@ -264,7 +264,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         statusCode = code;
         print("Status Code is : ${statusCode}");
       });
-      // file.delete();
+      file.delete();
     }
   }
 
@@ -382,32 +382,32 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               // fillCards(),
             ]),
           )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
-          setState(() {
-            textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
-            textWidgets.add(Text('board: ${androidInfo.board}'));
-            textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
-            textWidgets.add(Text('brand: ${androidInfo.brand}'));
-            textWidgets.add(Text('device: ${androidInfo.device}'));
-            textWidgets.add(Text('display: ${androidInfo.display}'));
-            textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
-            textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
-            textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
-            textWidgets.add(Text('host: ${androidInfo.host}'));
-            textWidgets.add(Text('id: ${androidInfo.id}'));
-            textWidgets
-                .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
-            textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
-            textWidgets.add(Text('model: ${androidInfo.model}'));
-            textWidgets.add(Text('product: ${androidInfo.product}'));
-            textWidgets.add(Text('tags: ${androidInfo.tags}'));
-          });
-        },
-        tooltip: 'Increment',
-        child: Icon(Icons.refresh),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () async {
+      //     AndroidDeviceInfo androidInfo = await deviceInfoPlugin.androidInfo;
+      //     setState(() {
+      //       textWidgets.add(Text('androidId: ${androidInfo.androidId}'));
+      //       textWidgets.add(Text('board: ${androidInfo.board}'));
+      //       textWidgets.add(Text('bootloader: ${androidInfo.bootloader}'));
+      //       textWidgets.add(Text('brand: ${androidInfo.brand}'));
+      //       textWidgets.add(Text('device: ${androidInfo.device}'));
+      //       textWidgets.add(Text('display: ${androidInfo.display}'));
+      //       textWidgets.add(Text('fingerprint: ${androidInfo.fingerprint}'));
+      //       textWidgets.add(Text('hardware: ${androidInfo.hardware}'));
+      //       textWidgets.add(Text('hashCode: ${androidInfo.hashCode}'));
+      //       textWidgets.add(Text('host: ${androidInfo.host}'));
+      //       textWidgets.add(Text('id: ${androidInfo.id}'));
+      //       textWidgets
+      //           .add(Text('isPhysicalDevice: ${androidInfo.isPhysicalDevice}'));
+      //       textWidgets.add(Text('manufacturer: ${androidInfo.manufacturer}'));
+      //       textWidgets.add(Text('model: ${androidInfo.model}'));
+      //       textWidgets.add(Text('product: ${androidInfo.product}'));
+      //       textWidgets.add(Text('tags: ${androidInfo.tags}'));
+      //     });
+      //   },
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.refresh),
+      // ),
     );
   }
 }

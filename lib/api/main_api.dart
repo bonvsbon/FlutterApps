@@ -6,7 +6,7 @@ import 'dart:convert';
 
 class ApiConnection {
   Uri _request;
-  // String _targetUrl = "192.168.4.31:5001";
+  // String _targetUrl = "192.168.4.126:5001";
   // String _targetPath = "/api/";
   String _targetUrl = "synergy.nextcapital.co.th";
   String _targetPath = "/webtest/APICore/api/";
@@ -58,11 +58,15 @@ class ApiConnection {
     //   ..badCertificateCallback =
     //       ((X509Certificate cert, String host, int port) => trustSelfSigned);
     // IOClient ioClient = new IOClient(httpClient);
+
     Map<String, String> param = {"username": username};
     _request = Uri.https(_targetUrl, _targetPath + module, param);
     var request = http.MultipartRequest('POST', _request);
     request.files.add(await http.MultipartFile.fromPath('files', file.path));
     http.StreamedResponse res = await request.send();
+    // await ioClient.send(request).then((http.StreamedResponse response) {
+    //   return response.statusCode;
+    // });
     return res.statusCode;
   }
 }

@@ -1,4 +1,4 @@
-name: m_fs
+name: nextphone
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -64,6 +64,16 @@ dev_dependencies:
     sdk: flutter
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+  flutter_launcher_icons: "^0.7.0"
+
+# Icon
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/launcher/icon.jpg"
+  image_path_ios: "assets/launcher/icon.jpg"
+
 
 # The following section is specific to Flutter.
 flutter:

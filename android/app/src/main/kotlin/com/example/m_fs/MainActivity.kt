@@ -1,4 +1,4 @@
-package com.example.m_fs
+package com.example.nextphone
 
 import io.flutter.embedding.android.FlutterActivity
 
